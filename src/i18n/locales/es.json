@@ -1,0 +1,75 @@
+{
+  "common": {
+    "appName": "Sistema universitario de nueva generación",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "search": "Buscar",
+    "loading": "Cargando...",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "download": "Descargar",
+    "print": "Imprimir",
+    "upload": "Subir",
+    "close": "Cerrar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "students": "Estudiantes",
+    "lecturers": "Profesores",
+    "courses": "Cursos",
+    "results": "Resultados",
+    "transcript": "Expediente",
+    "certificate": "Diploma",
+    "lms": "Aprendizaje",
+    "exams": "Exámenes",
+    "documents": "Documentos",
+    "analytics": "Analítica",
+    "audit": "Registros de auditoría",
+    "settings": "Configuración",
+    "signOut": "Cerrar sesión",
+    "collapse": "Contraer"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administre su cuenta y las preferencias del sistema",
+    "tabs": {
+      "profile": "Perfil",
+      "region": "Región e idioma",
+      "grading": "Escala de calificación",
+      "notifications": "Notificaciones",
+      "security": "Seguridad"
+    },
+    "region": {
+      "heading": "Región e idioma",
+      "currentRegion": "Región actual",
+      "changeRegion": "Cambiar región",
+      "language": "Idioma",
+      "currency": "Moneda",
+      "timezone": "Zona horaria",
+      "rtl": "Diseño de derecha a izquierda"
+    }
+  },
+  "region": {
+    "africa": "África",
+    "middleEast": "Oriente Medio",
+    "europe": "Europa",
+    "northAmerica": "Norteamérica"
+  },
+  "grading": {
+    "scaleTitle": "Escala de calificación",
+    "grade": "Calificación",
+    "scoreRange": "Rango de puntos",
+    "gradePoint": "Punto de calificación",
+    "remark": "Observación",
+    "gpa": "GPA",
+    "cgpa": "CGPA",
+    "classification": "Clasificación"
+  }
+}

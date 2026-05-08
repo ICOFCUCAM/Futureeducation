@@ -1,14 +1,18 @@
 import React, { useRef, useState } from 'react';
 import { sampleTranscriptData } from '@/lib/sampleData';
 import { UNIVERSITY, IMAGES } from '@/lib/constants';
-import { getClassification } from '@/lib/grading';
+import { useRegion } from '@/contexts/RegionContext';
+import { useGrading } from '@/hooks/useGrading';
+import { formatDate } from '@/lib/intl';
 import type { TranscriptData } from '@/lib/types';
-import { Download, Printer, Eye, FileText, QrCode } from 'lucide-react';
+import { Download, Eye } from 'lucide-react';
 
 export default function TranscriptGenerator() {
   const transcriptRef = useRef<HTMLDivElement>(null);
   const [data] = useState<TranscriptData>(sampleTranscriptData);
   const [showPreview, setShowPreview] = useState(true);
+  const { region, locale } = useRegion();
+  const { getClassification, scaleMax } = useGrading();
 
   function handlePrint() {
     const content = transcriptRef.current;
@@ -68,7 +72,7 @@ export default function TranscriptGenerator() {
             <p className="text-sm text-gray-500">{data.student.degree_type} {data.student.program}</p>
             <p className="text-sm text-gray-500">{data.department.faculty}</p>
             <div className="mt-1">
-              <span className="text-lg font-bold text-[#1a237e]">CGPA: {data.cgpa}</span>
+              <span className="text-lg font-bold text-[#1a237e]">CGPA: {data.cgpa}/{scaleMax.toFixed(1)}</span>
               <span className="text-xs text-gray-400 ml-2">({getClassification(data.cgpa)})</span>
             </div>
           </div>
@@ -109,7 +113,7 @@ export default function TranscriptGenerator() {
                 <div><strong>Programme:</strong> {data.student.degree_type} {data.student.program}</div>
                 <div><strong>Department:</strong> {data.department.name}</div>
                 <div><strong>Faculty:</strong> {data.department.faculty}</div>
-                <div><strong>Date of Birth:</strong> {data.student.date_of_birth ? new Date(data.student.date_of_birth).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : 'N/A'}</div>
+                <div><strong>Date of Birth:</strong> {data.student.date_of_birth ? formatDate(data.student.date_of_birth, locale, { day: '2-digit', month: 'long', year: 'numeric' }) : 'N/A'}</div>
                 <div><strong>Admission Year:</strong> {data.student.admission_year}/{data.student.admission_year + 1}</div>
                 <div><strong>Nationality:</strong> {data.student.nationality}</div>
               </div>
@@ -179,10 +183,13 @@ export default function TranscriptGenerator() {
               {/* Summary */}
               <div style={{ marginTop: '15px', padding: '10px', border: '2px solid #1a237e', backgroundColor: '#e8eaf6' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', fontSize: '12px' }}>
-                  <div><strong>Total Credits Earned:</strong> {data.totalCredits}</div>
-                  <div><strong>Final CGPA:</strong> {data.cgpa.toFixed(2)}/5.00</div>
-                  <div><strong>Classification:</strong> {data.classification}</div>
+                  <div><strong>Total {region.creditSystem.unit} Earned:</strong> {data.totalCredits}</div>
+                  <div><strong>Final CGPA:</strong> {data.cgpa.toFixed(2)}/{scaleMax.toFixed(2)}</div>
+                  <div><strong>Classification:</strong> {getClassification(data.cgpa)}</div>
                 </div>
+                <p style={{ fontSize: '10px', color: '#666', marginTop: '6px' }}>
+                  Issued under {region.name} academic standards · Accreditation: {region.accreditationBodies.slice(0, 2).join(', ')}
+                </p>
               </div>
 
               {/* QR Code & Verification */}
@@ -241,7 +248,7 @@ export default function TranscriptGenerator() {
               {/* Footer */}
               <div style={{ marginTop: '15px', textAlign: 'center', fontSize: '9px', color: '#999', borderTop: '1px solid #eee', paddingTop: '8px' }}>
                 <p>This transcript is issued without erasure or alteration. Any unauthorized modification renders it invalid.</p>
-                <p>Date of Issue: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                <p>Date of Issue: {formatDate(new Date(), locale, { day: '2-digit', month: 'long', year: 'numeric' })}</p>
                 <p>{UNIVERSITY.name} · {UNIVERSITY.address} · {UNIVERSITY.website}</p>
               </div>
             </div>

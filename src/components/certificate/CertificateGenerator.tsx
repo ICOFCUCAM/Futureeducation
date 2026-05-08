@@ -1,13 +1,17 @@
 import React, { useRef, useState } from 'react';
 import { sampleTranscriptData } from '@/lib/sampleData';
 import { UNIVERSITY, IMAGES } from '@/lib/constants';
-import { getClassification } from '@/lib/grading';
+import { useRegion } from '@/contexts/RegionContext';
+import { useGrading } from '@/hooks/useGrading';
+import { formatDate } from '@/lib/intl';
 import { Download, Eye, Award } from 'lucide-react';
 
 export default function CertificateGenerator() {
   const certRef = useRef<HTMLDivElement>(null);
   const [showPreview, setShowPreview] = useState(true);
   const data = sampleTranscriptData;
+  const { region, locale } = useRegion();
+  const { getClassification, scaleMax } = useGrading();
 
   function handlePrint() {
     const content = certRef.current;
@@ -32,6 +36,7 @@ export default function CertificateGenerator() {
   }
 
   const classification = getClassification(data.cgpa);
+  const dateLocale = locale;
 
   return (
     <div className="space-y-6">
@@ -57,16 +62,16 @@ export default function CertificateGenerator() {
         <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2"><Award size={18} className="text-amber-500" /> Graduation Eligibility</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="p-3 bg-emerald-50 rounded-lg">
-            <p className="text-xs text-emerald-600 font-medium">Credits Completed</p>
-            <p className="text-lg font-bold text-emerald-700">{data.totalCredits} / 111</p>
+            <p className="text-xs text-emerald-600 font-medium">{region.creditSystem.unit} Completed</p>
+            <p className="text-lg font-bold text-emerald-700">{data.totalCredits}</p>
           </div>
           <div className="p-3 bg-blue-50 rounded-lg">
             <p className="text-xs text-blue-600 font-medium">Final CGPA</p>
-            <p className="text-lg font-bold text-blue-700">{data.cgpa} / 5.00</p>
+            <p className="text-lg font-bold text-blue-700">{data.cgpa} / {scaleMax.toFixed(2)}</p>
           </div>
           <div className="p-3 bg-purple-50 rounded-lg">
             <p className="text-xs text-purple-600 font-medium">Classification</p>
-            <p className="text-sm font-bold text-purple-700">{classification}</p>
+            <p className="text-sm font-bold text-purple-700">{getClassification(data.cgpa)}</p>
           </div>
           <div className="p-3 bg-amber-50 rounded-lg">
             <p className="text-xs text-amber-600 font-medium">Status</p>
@@ -175,7 +180,10 @@ export default function CertificateGenerator() {
                 </div>
 
                 <p style={{ fontSize: '10px', color: '#999', marginTop: '10px' }}>
-                  Date: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })} · Certificate No: CERT/{data.student.matric_no.replace(/\//g, '')}
+                  Date: {formatDate(new Date(), dateLocale, { day: '2-digit', month: 'long', year: 'numeric' })} · Certificate No: CERT/{data.student.matric_no.replace(/\//g, '')}
+                </p>
+                <p style={{ fontSize: '9px', color: '#999', marginTop: '4px' }}>
+                  Issued under {region.name} academic standards · {region.accreditationBodies.slice(0, 2).join(', ')}
                 </p>
               </div>
             </div>

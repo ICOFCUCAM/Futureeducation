@@ -1,0 +1,75 @@
+{
+  "common": {
+    "appName": "Universitätssystem der nächsten Generation",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "search": "Suchen",
+    "loading": "Wird geladen...",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Absenden",
+    "confirm": "Bestätigen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "view": "Anzeigen",
+    "download": "Herunterladen",
+    "print": "Drucken",
+    "upload": "Hochladen",
+    "close": "Schließen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "nav": {
+    "dashboard": "Übersicht",
+    "students": "Studierende",
+    "lecturers": "Lehrkräfte",
+    "courses": "Kurse",
+    "results": "Ergebnisse",
+    "transcript": "Notenauszug",
+    "certificate": "Zeugnis",
+    "lms": "Lernen",
+    "exams": "Prüfungen",
+    "documents": "Dokumente",
+    "analytics": "Analyse",
+    "audit": "Audit-Protokolle",
+    "settings": "Einstellungen",
+    "signOut": "Abmelden",
+    "collapse": "Einklappen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Verwalten Sie Ihr Konto und die Systemeinstellungen",
+    "tabs": {
+      "profile": "Profil",
+      "region": "Region & Sprache",
+      "grading": "Notenskala",
+      "notifications": "Benachrichtigungen",
+      "security": "Sicherheit"
+    },
+    "region": {
+      "heading": "Region & Sprache",
+      "currentRegion": "Aktuelle Region",
+      "changeRegion": "Region ändern",
+      "language": "Sprache",
+      "currency": "Währung",
+      "timezone": "Zeitzone",
+      "rtl": "Rechts-nach-links-Layout"
+    }
+  },
+  "region": {
+    "africa": "Afrika",
+    "middleEast": "Naher Osten",
+    "europe": "Europa",
+    "northAmerica": "Nordamerika"
+  },
+  "grading": {
+    "scaleTitle": "Notenskala",
+    "grade": "Note",
+    "scoreRange": "Punktebereich",
+    "gradePoint": "Notenpunkt",
+    "remark": "Bemerkung",
+    "gpa": "GPA",
+    "cgpa": "CGPA",
+    "classification": "Einstufung"
+  }
+}

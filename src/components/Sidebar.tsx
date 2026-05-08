@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { IMAGES, UNIVERSITY } from '@/lib/constants';
 import type { ViewType, UserRole } from '@/lib/types';
@@ -10,25 +11,25 @@ import {
 
 interface MenuItem {
   id: ViewType;
-  label: string;
+  labelKey: string;
   icon: React.ReactNode;
   roles: UserRole[];
 }
 
 const menuItems: MenuItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} />, roles: ['admin', 'student', 'lecturer'] },
-  { id: 'students', label: 'Students', icon: <Users size={20} />, roles: ['admin'] },
-  { id: 'lecturers', label: 'Lecturers', icon: <GraduationCap size={20} />, roles: ['admin'] },
-  { id: 'courses', label: 'Courses', icon: <BookOpen size={20} />, roles: ['admin', 'student', 'lecturer'] },
-  { id: 'results', label: 'Results', icon: <ClipboardList size={20} />, roles: ['admin', 'lecturer', 'student'] },
-  { id: 'transcript', label: 'Transcript', icon: <FileText size={20} />, roles: ['admin', 'student'] },
-  { id: 'certificate', label: 'Certificate', icon: <Award size={20} />, roles: ['admin', 'student'] },
-  { id: 'lms', label: 'Learning (LMS)', icon: <Monitor size={20} />, roles: ['admin', 'student', 'lecturer'] },
-  { id: 'exams', label: 'Examinations', icon: <PenTool size={20} />, roles: ['admin', 'student', 'lecturer'] },
-  { id: 'documents', label: 'Documents', icon: <FolderOpen size={20} />, roles: ['admin', 'student'] },
-  { id: 'analytics', label: 'Analytics', icon: <BarChart3 size={20} />, roles: ['admin'] },
-  { id: 'audit', label: 'Audit Logs', icon: <Shield size={20} />, roles: ['admin'] },
-  { id: 'settings', label: 'Settings', icon: <Settings size={20} />, roles: ['admin', 'student', 'lecturer'] },
+  { id: 'dashboard', labelKey: 'nav.dashboard', icon: <LayoutDashboard size={20} />, roles: ['admin', 'student', 'lecturer'] },
+  { id: 'students', labelKey: 'nav.students', icon: <Users size={20} />, roles: ['admin'] },
+  { id: 'lecturers', labelKey: 'nav.lecturers', icon: <GraduationCap size={20} />, roles: ['admin'] },
+  { id: 'courses', labelKey: 'nav.courses', icon: <BookOpen size={20} />, roles: ['admin', 'student', 'lecturer'] },
+  { id: 'results', labelKey: 'nav.results', icon: <ClipboardList size={20} />, roles: ['admin', 'lecturer', 'student'] },
+  { id: 'transcript', labelKey: 'nav.transcript', icon: <FileText size={20} />, roles: ['admin', 'student'] },
+  { id: 'certificate', labelKey: 'nav.certificate', icon: <Award size={20} />, roles: ['admin', 'student'] },
+  { id: 'lms', labelKey: 'nav.lms', icon: <Monitor size={20} />, roles: ['admin', 'student', 'lecturer'] },
+  { id: 'exams', labelKey: 'nav.exams', icon: <PenTool size={20} />, roles: ['admin', 'student', 'lecturer'] },
+  { id: 'documents', labelKey: 'nav.documents', icon: <FolderOpen size={20} />, roles: ['admin', 'student'] },
+  { id: 'analytics', labelKey: 'nav.analytics', icon: <BarChart3 size={20} />, roles: ['admin'] },
+  { id: 'audit', labelKey: 'nav.audit', icon: <Shield size={20} />, roles: ['admin'] },
+  { id: 'settings', labelKey: 'nav.settings', icon: <Settings size={20} />, roles: ['admin', 'student', 'lecturer'] },
 ];
 
 interface SidebarProps {
@@ -40,6 +41,7 @@ interface SidebarProps {
 
 export default function Sidebar({ currentView, onViewChange, collapsed, onToggle }: SidebarProps) {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const filteredItems = menuItems.filter((item) => user && item.roles.includes(user.role));
 
   return (
@@ -80,21 +82,24 @@ export default function Sidebar({ currentView, onViewChange, collapsed, onToggle
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
-        {filteredItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => onViewChange(item.id)}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${
-              currentView === item.id
-                ? 'bg-white/15 text-amber-300 font-semibold shadow-lg shadow-black/10'
-                : 'text-blue-100 hover:bg-white/10 hover:text-white'
-            } ${collapsed ? 'justify-center' : ''}`}
-            title={collapsed ? item.label : undefined}
-          >
-            <span className="flex-shrink-0">{item.icon}</span>
-            {!collapsed && <span className="truncate">{item.label}</span>}
-          </button>
-        ))}
+        {filteredItems.map((item) => {
+          const label = t(item.labelKey);
+          return (
+            <button
+              key={item.id}
+              onClick={() => onViewChange(item.id)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${
+                currentView === item.id
+                  ? 'bg-white/15 text-amber-300 font-semibold shadow-lg shadow-black/10'
+                  : 'text-blue-100 hover:bg-white/10 hover:text-white'
+              } ${collapsed ? 'justify-center' : ''}`}
+              title={collapsed ? label : undefined}
+            >
+              <span className="flex-shrink-0">{item.icon}</span>
+              {!collapsed && <span className="truncate">{label}</span>}
+            </button>
+          );
+        })}
       </nav>
 
       {/* Bottom Actions */}
@@ -106,7 +111,7 @@ export default function Sidebar({ currentView, onViewChange, collapsed, onToggle
           }`}
         >
           <LogOut size={20} />
-          {!collapsed && <span>Sign Out</span>}
+          {!collapsed && <span>{t('nav.signOut')}</span>}
         </button>
         <button
           onClick={onToggle}
@@ -115,7 +120,7 @@ export default function Sidebar({ currentView, onViewChange, collapsed, onToggle
           }`}
         >
           {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-          {!collapsed && <span>Collapse</span>}
+          {!collapsed && <span>{t('nav.collapse')}</span>}
         </button>
       </div>
     </aside>

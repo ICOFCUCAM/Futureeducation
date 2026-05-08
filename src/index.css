@@ -47,6 +47,44 @@
     --sidebar-ring: 221 83% 53%;
   }
 
+  /* Region theme tokens — overridden via [data-region] attribute on <html>. */
+  :root {
+    --region-primary: #1a237e;
+    --region-secondary: #475569;
+    --region-accent: #facc15;
+  }
+  [data-region="africa"] {
+    --region-primary: #1a8754;
+    --region-secondary: #d97706;
+    --region-accent: #fbbf24;
+  }
+  [data-region="middleEast"] {
+    --region-primary: #0f766e;
+    --region-secondary: #ca8a04;
+    --region-accent: #d4a017;
+  }
+  [data-region="europe"] {
+    --region-primary: #1e3a8a;
+    --region-secondary: #475569;
+    --region-accent: #facc15;
+  }
+  [data-region="northAmerica"] {
+    --region-primary: #1e40af;
+    --region-secondary: #b91c1c;
+    --region-accent: #f59e0b;
+  }
+
+  /* RTL overrides */
+  [dir="rtl"] {
+    font-family: 'Tajawal', 'Cairo', 'Inter', system-ui, sans-serif;
+  }
+  [dir="rtl"] .ml-64 { margin-left: 0; margin-right: 16rem; }
+  [dir="rtl"] .ml-\[72px\] { margin-left: 0; margin-right: 72px; }
+  [dir="rtl"] aside.fixed.left-0 { left: auto; right: 0; }
+  [dir="rtl"] header.fixed.right-0 { right: auto; left: 0; }
+  [dir="rtl"] header.left-64 { left: 0; right: 16rem; }
+  [dir="rtl"] header.left-\[72px\] { left: 0; right: 72px; }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;

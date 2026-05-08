@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { calculateGrade, calculateGPA, getGradeColor, GRADING_SCALE } from '@/lib/grading';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRegion } from '@/contexts/RegionContext';
+import { useGrading } from '@/hooks/useGrading';
 import type { Course, Student } from '@/lib/types';
 import {
-  Search, Save, CheckCircle2, AlertCircle, Upload, Download,
-  ChevronDown, Calculator, X, Info
+  Save, CheckCircle2, Info
 } from 'lucide-react';
 
 interface ResultEntry {
@@ -21,6 +21,8 @@ interface ResultEntry {
 
 export default function ResultProcessing() {
   const { user } = useAuth();
+  const { region } = useRegion();
+  const { calculateGrade, getGradeColor, scale } = useGrading();
   const [courses, setCourses] = useState<Course[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string>('');
@@ -110,11 +112,14 @@ export default function ResultProcessing() {
   }
 
   const selectedCourseData = courses.find((c) => c.id === selectedCourse);
+  const passingMin = Math.min(
+    ...scale.filter((b) => b.gradePoint > 0).map((b) => b.minScore),
+  );
   const classAvg = results.filter((r) => r.totalScore > 0).length > 0
     ? (results.filter((r) => r.totalScore > 0).reduce((s, r) => s + r.totalScore, 0) / results.filter((r) => r.totalScore > 0).length).toFixed(1)
     : '0';
-  const passCount = results.filter((r) => r.totalScore >= 40).length;
-  const failCount = results.filter((r) => r.totalScore > 0 && r.totalScore < 40).length;
+  const passCount = results.filter((r) => r.totalScore >= passingMin).length;
+  const failCount = results.filter((r) => r.totalScore > 0 && r.totalScore < passingMin).length;
 
   return (
     <div className="space-y-6">
@@ -132,9 +137,9 @@ export default function ResultProcessing() {
       {/* Grading Scale Panel */}
       {showGradingScale && (
         <div className="bg-white rounded-xl border border-amber-200 p-5">
-          <h3 className="font-semibold text-gray-800 mb-3">Grading Scale</h3>
+          <h3 className="font-semibold text-gray-800 mb-3">Grading Scale — {region.name}</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {GRADING_SCALE.map((g) => (
+            {scale.map((g) => (
               <div key={g.grade} className={`p-3 rounded-lg text-center ${getGradeColor(g.grade)}`}>
                 <p className="text-2xl font-bold">{g.grade}</p>
                 <p className="text-xs font-medium">{g.minScore}-{g.maxScore}%</p>
@@ -156,7 +161,7 @@ export default function ResultProcessing() {
         >
           <option value="">-- Select a course --</option>
           {courses.map((c) => (
-            <option key={c.id} value={c.id}>{c.code} - {c.title} ({c.credit_unit} CU)</option>
+            <option key={c.id} value={c.id}>{c.code} - {c.title} ({c.credit_unit} {region.creditSystem.unit})</option>
           ))}
         </select>
       </div>

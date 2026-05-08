@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRegion } from '@/contexts/RegionContext';
+import { useGrading } from '@/hooks/useGrading';
 import { sampleTranscriptData } from '@/lib/sampleData';
-import { getGPAColor, getClassificationShort } from '@/lib/grading';
 import {
   BookOpen, ClipboardList, FileText, Award, Monitor,
   Calendar, TrendingUp, Clock, Download, ArrowRight
@@ -14,6 +15,8 @@ interface StudentDashboardProps {
 
 export default function StudentDashboard({ onNavigate }: StudentDashboardProps) {
   const { user } = useAuth();
+  const { region } = useRegion();
+  const { getClassificationShort, scaleMax, getGPAColor } = useGrading();
   const data = sampleTranscriptData;
 
   // Calculate current semester results
@@ -38,11 +41,11 @@ export default function StudentDashboard({ onNavigate }: StudentDashboardProps) 
           <div className="flex gap-6 mt-4">
             <div>
               <p className="text-3xl font-bold text-amber-300">{data.cgpa}</p>
-              <p className="text-xs text-blue-200">Current CGPA</p>
+              <p className="text-xs text-blue-200">Current CGPA / {scaleMax.toFixed(1)}</p>
             </div>
             <div>
               <p className="text-3xl font-bold text-emerald-300">{data.totalCredits}</p>
-              <p className="text-xs text-blue-200">Credits Earned</p>
+              <p className="text-xs text-blue-200">{region.creditSystem.unit} Earned</p>
             </div>
             <div>
               <p className="text-lg font-bold text-amber-300 mt-1">{getClassificationShort(data.cgpa)}</p>
@@ -113,7 +116,7 @@ export default function StudentDashboard({ onNavigate }: StudentDashboardProps) 
                 </div>
                 <div className="text-right">
                   <span className={`text-sm font-bold ${getGPAColor(course.gradePoint)}`}>{course.grade}</span>
-                  <p className="text-[10px] text-gray-400">{course.creditUnit} CU</p>
+                  <p className="text-[10px] text-gray-400">{course.creditUnit} {region.creditSystem.unit}</p>
                 </div>
               </div>
             ))}
