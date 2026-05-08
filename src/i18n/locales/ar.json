@@ -1,0 +1,75 @@
+{
+  "common": {
+    "appName": "نظام الجامعة من الجيل القادم",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "search": "بحث",
+    "loading": "جارٍ التحميل...",
+    "back": "رجوع",
+    "next": "التالي",
+    "submit": "إرسال",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "download": "تنزيل",
+    "print": "طباعة",
+    "upload": "رفع",
+    "close": "إغلاق",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "students": "الطلاب",
+    "lecturers": "المحاضرون",
+    "courses": "المقررات",
+    "results": "النتائج",
+    "transcript": "السجل الأكاديمي",
+    "certificate": "الشهادة",
+    "lms": "التعلّم",
+    "exams": "الامتحانات",
+    "documents": "المستندات",
+    "analytics": "التحليلات",
+    "audit": "سجلات التدقيق",
+    "settings": "الإعدادات",
+    "signOut": "تسجيل الخروج",
+    "collapse": "طيّ"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "إدارة حسابك وتفضيلات النظام",
+    "tabs": {
+      "profile": "الملف الشخصي",
+      "region": "المنطقة واللغة",
+      "grading": "سلّم التقدير",
+      "notifications": "الإشعارات",
+      "security": "الأمان"
+    },
+    "region": {
+      "heading": "المنطقة واللغة",
+      "currentRegion": "المنطقة الحالية",
+      "changeRegion": "تغيير المنطقة",
+      "language": "اللغة",
+      "currency": "العملة",
+      "timezone": "المنطقة الزمنية",
+      "rtl": "تخطيط من اليمين إلى اليسار"
+    }
+  },
+  "region": {
+    "africa": "أفريقيا",
+    "middleEast": "الشرق الأوسط",
+    "europe": "أوروبا",
+    "northAmerica": "أمريكا الشمالية"
+  },
+  "grading": {
+    "scaleTitle": "سلّم التقدير",
+    "grade": "الدرجة",
+    "scoreRange": "نطاق الدرجة",
+    "gradePoint": "نقطة الدرجة",
+    "remark": "الملاحظة",
+    "gpa": "المعدل الفصلي",
+    "cgpa": "المعدل التراكمي",
+    "classification": "التصنيف"
+  }
+}

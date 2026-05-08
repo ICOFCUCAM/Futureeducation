@@ -1,0 +1,75 @@
+{
+  "common": {
+    "appName": "Next-Gen University System",
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "loading": "Loading...",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "download": "Download",
+    "print": "Print",
+    "upload": "Upload",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "lecturers": "Lecturers",
+    "courses": "Courses",
+    "results": "Results",
+    "transcript": "Transcript",
+    "certificate": "Certificate",
+    "lms": "Learning",
+    "exams": "Examinations",
+    "documents": "Documents",
+    "analytics": "Analytics",
+    "audit": "Audit Logs",
+    "settings": "Settings",
+    "signOut": "Sign Out",
+    "collapse": "Collapse"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and system preferences",
+    "tabs": {
+      "profile": "Profile",
+      "region": "Region & Language",
+      "grading": "Grading Scale",
+      "notifications": "Notifications",
+      "security": "Security"
+    },
+    "region": {
+      "heading": "Region & Language",
+      "currentRegion": "Current region",
+      "changeRegion": "Change region",
+      "language": "Language",
+      "currency": "Currency",
+      "timezone": "Timezone",
+      "rtl": "Right-to-left layout"
+    }
+  },
+  "region": {
+    "africa": "Africa",
+    "middleEast": "Middle East",
+    "europe": "Europe",
+    "northAmerica": "North America"
+  },
+  "grading": {
+    "scaleTitle": "Grading scale",
+    "grade": "Grade",
+    "scoreRange": "Score range",
+    "gradePoint": "Grade Point",
+    "remark": "Remark",
+    "gpa": "GPA",
+    "cgpa": "CGPA",
+    "classification": "Classification"
+  }
+}

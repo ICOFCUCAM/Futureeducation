@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Search, Bell, MessageSquare, Sun, Moon, Menu } from 'lucide-react';
+import { useRegion } from '@/contexts/RegionContext';
+import { Search, Bell, MessageSquare, Sun, Moon, Menu, Globe2 } from 'lucide-react';
 import type { UserRole } from '@/lib/types';
 
 interface TopBarProps {
@@ -10,6 +11,7 @@ interface TopBarProps {
 
 export default function TopBar({ sidebarCollapsed, onMenuToggle }: TopBarProps) {
   const { user, session, switchRole } = useAuth();
+  const { region, openPicker } = useRegion();
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -75,6 +77,15 @@ export default function TopBar({ sidebarCollapsed, onMenuToggle }: TopBarProps) 
             <span className="text-[10px] text-emerald-700 font-medium capitalize">{user?.role} · Authenticated</span>
           </div>
         )}
+
+        <button
+          onClick={openPicker}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors text-xs"
+          title={`Region: ${region.name}`}
+        >
+          <Globe2 size={16} />
+          <span className="hidden md:inline">{region.flagEmoji} {region.shortName}</span>
+        </button>
 
         <button
           onClick={() => setDarkMode(!darkMode)}

@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
-import { GRADING_SCALE } from '@/lib/grading';
-import { UNIVERSITY } from '@/lib/constants';
+import { useRegion } from '@/contexts/RegionContext';
+import { useGrading } from '@/hooks/useGrading';
+import { regionList, type RegionId } from '@/regions';
+import { formatCurrency } from '@/lib/intl';
 import {
-  User, Shield, Bell, Palette, Database, Save, CheckCircle2
+  User, Shield, Bell, Database, Save, CheckCircle2, Globe2, ArrowRight
 } from 'lucide-react';
 
 export default function SettingsPage() {
   const { user } = useAuth();
+  const { t } = useTranslation();
+  const { region, regionId, locale, currency, setRegion, setLocale, setCurrency, openPicker } = useRegion();
+  const grading = useGrading();
   const [activeTab, setActiveTab] = useState('profile');
   const [saved, setSaved] = useState(false);
 
@@ -24,17 +30,18 @@ export default function SettingsPage() {
   }
 
   const tabs = [
-    { id: 'profile', label: 'Profile', icon: <User size={16} /> },
-    { id: 'grading', label: 'Grading Scale', icon: <Database size={16} /> },
-    { id: 'notifications', label: 'Notifications', icon: <Bell size={16} /> },
-    { id: 'security', label: 'Security', icon: <Shield size={16} /> },
+    { id: 'profile', label: t('settings.tabs.profile'), icon: <User size={16} /> },
+    { id: 'region', label: t('settings.tabs.region'), icon: <Globe2 size={16} /> },
+    { id: 'grading', label: t('settings.tabs.grading'), icon: <Database size={16} /> },
+    { id: 'notifications', label: t('settings.tabs.notifications'), icon: <Bell size={16} /> },
+    { id: 'security', label: t('settings.tabs.security'), icon: <Shield size={16} /> },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-800">Settings</h2>
-        <p className="text-sm text-gray-500">Manage your account and system preferences</p>
+        <h2 className="text-xl font-bold text-gray-800">{t('settings.title')}</h2>
+        <p className="text-sm text-gray-500">{t('settings.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -92,21 +99,123 @@ export default function SettingsPage() {
             </div>
           )}
 
+          {activeTab === 'region' && (
+            <div className="space-y-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="font-semibold text-gray-800">{t('settings.region.heading')}</h3>
+                  <p className="text-sm text-gray-500">
+                    Tailors grading, currency, calendar, language and compliance to your part of the world.
+                  </p>
+                </div>
+                <button
+                  onClick={openPicker}
+                  className="flex items-center gap-2 px-4 py-2 bg-[#1a237e] text-white rounded-lg text-sm font-medium hover:bg-[#283593]"
+                >
+                  {t('settings.region.changeRegion')} <ArrowRight size={14} />
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl border border-gray-100 bg-gradient-to-br from-blue-50 to-white">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{region.flagEmoji}</span>
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-gray-500">{t('settings.region.currentRegion')}</p>
+                    <p className="font-bold text-gray-800">{region.name}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-3">{region.description}</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4 text-xs">
+                  <div><p className="text-gray-500">Credit system</p><p className="font-medium">{region.creditSystem.unit}</p></div>
+                  <div><p className="text-gray-500">GPA scale</p><p className="font-medium">/{region.gpaScaleMax.toFixed(1)}</p></div>
+                  <div><p className="text-gray-500">Calendar</p><p className="font-medium">{region.academicCalendar.description}</p></div>
+                  <div><p className="text-gray-500">Compliance</p><p className="font-medium">{region.complianceFrameworks.slice(0, 2).join(', ')}</p></div>
+                  <div><p className="text-gray-500">Payments</p><p className="font-medium">{region.paymentGateways.slice(0, 2).join(', ')}</p></div>
+                  <div><p className="text-gray-500">Sample currency</p><p className="font-medium">{formatCurrency(1000, currency, locale)}</p></div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">{t('settings.region.language')}</label>
+                  <select
+                    value={locale}
+                    onChange={(e) => setLocale(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  >
+                    {region.supportedLocales.map((l) => (
+                      <option key={l} value={l}>{l.toUpperCase()}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">{t('settings.region.currency')}</label>
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  >
+                    {region.currencies.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">{t('settings.region.timezone')}</label>
+                  <input
+                    value={region.defaultTimezone}
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-gray-600 mb-2">All regions</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {regionList.map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => setRegion(r.id as RegionId)}
+                      className={`p-3 rounded-lg border text-left transition-all ${
+                        regionId === r.id
+                          ? 'border-[#1a237e] bg-blue-50'
+                          : 'border-gray-200 hover:border-blue-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{r.flagEmoji}</span>
+                        <div>
+                          <p className="text-xs font-bold text-gray-800">{r.name}</p>
+                          <p className="text-[10px] text-gray-500">{r.defaultCurrency} · {r.creditSystem.unit}</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'grading' && (
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-800">Grading Scale Configuration</h3>
-              <p className="text-sm text-gray-500">Current grading scale used for all result processing</p>
+              <div>
+                <h3 className="font-semibold text-gray-800">{t('grading.scaleTitle')} — {region.name}</h3>
+                <p className="text-sm text-gray-500">
+                  Region-aware. Switch region to see a different scale.
+                </p>
+              </div>
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500">Score Range</th>
-                    <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500">Grade</th>
-                    <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500">Grade Point</th>
-                    <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500">Remark</th>
+                    <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500">{t('grading.scoreRange')}</th>
+                    <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500">{t('grading.grade')}</th>
+                    <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500">{t('grading.gradePoint')}</th>
+                    <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500">{t('grading.remark')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {GRADING_SCALE.map((g) => (
+                  {grading.scale.map((g) => (
                     <tr key={g.grade} className="hover:bg-gray-50">
                       <td className="px-4 py-2 text-sm">{g.minScore} - {g.maxScore}</td>
                       <td className="px-4 py-2 text-sm text-center font-bold">{g.grade}</td>
@@ -118,17 +227,14 @@ export default function SettingsPage() {
               </table>
               <div className="p-4 bg-blue-50 rounded-xl">
                 <p className="text-sm text-blue-700 font-medium">GPA Formula</p>
-                <p className="text-xs text-blue-600 mt-1 font-mono">GPA = Σ(Grade Point × Credit Unit) / Σ(Credit Units)</p>
+                <p className="text-xs text-blue-600 mt-1 font-mono">{t('grading.gpa')} = Σ({t('grading.gradePoint')} × {region.creditSystem.unit}) / Σ({region.creditSystem.unit})</p>
               </div>
               <div className="p-4 bg-amber-50 rounded-xl">
-                <p className="text-sm text-amber-700 font-medium">Degree Classification</p>
-                <div className="grid grid-cols-2 gap-2 mt-2 text-xs text-amber-600">
-                  <p>4.50 - 5.00: First Class Honours</p>
-                  <p>3.50 - 4.49: Second Class Upper</p>
-                  <p>2.40 - 3.49: Second Class Lower</p>
-                  <p>1.50 - 2.39: Third Class</p>
-                  <p>1.00 - 1.49: Pass</p>
-                  <p>Below 1.00: Fail</p>
+                <p className="text-sm text-amber-700 font-medium">{t('grading.classification')}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-xs text-amber-700">
+                  {grading.classification.map((c) => (
+                    <p key={c.label}>≥ {c.minCgpa.toFixed(2)}: {c.label}</p>
+                  ))}
                 </div>
               </div>
             </div>
