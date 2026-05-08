@@ -19,6 +19,8 @@ import DocumentManagement from './documents/DocumentManagement';
 import AnalyticsDashboard from './analytics/AnalyticsDashboard';
 import SettingsPage from './settings/SettingsPage';
 import AuditLogs from './audit/AuditLogs';
+import BillingPage from './billing/BillingPage';
+import CredentialsPage from './credentials/CredentialsPage';
 
 export default function AppLayout() {
   const { isAuthenticated, user } = useAuth();
@@ -57,6 +59,10 @@ export default function AppLayout() {
         return <DocumentManagement />;
       case 'analytics':
         return <AnalyticsDashboard />;
+      case 'billing':
+        return <BillingPage />;
+      case 'credentials':
+        return <CredentialsPage />;
       case 'settings':
         return <SettingsPage />;
       case 'audit':

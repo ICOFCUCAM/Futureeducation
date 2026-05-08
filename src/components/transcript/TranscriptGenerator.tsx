@@ -19,13 +19,21 @@ export default function TranscriptGenerator() {
     if (!content) return;
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
+    const dir = region.rtl ? 'rtl' : 'ltr';
+    const fontImport = region.rtl
+      ? `@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;600;700&display=swap');`
+      : '';
+    const fontFamily = region.rtl
+      ? `'Tajawal', 'Cairo', 'Times New Roman', serif`
+      : `'Times New Roman', Times, serif`;
     printWindow.document.write(`
-      <html>
+      <html lang="${locale}" dir="${dir}">
         <head>
           <title>Academic Transcript - ${data.student.matric_no}</title>
           <style>
+            ${fontImport}
             @page { size: A4; margin: 15mm; }
-            body { margin: 0; font-family: 'Times New Roman', Times, serif; }
+            body { margin: 0; font-family: ${fontFamily}; direction: ${dir}; }
             * { box-sizing: border-box; }
             ${getTranscriptStyles()}
           </style>

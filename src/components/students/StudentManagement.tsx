@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useRegion } from '@/contexts/RegionContext';
 import type { Student } from '@/lib/types';
 import { IMAGES } from '@/lib/constants';
 import {
-  Search, Plus, Filter, Download, Upload, Eye, Edit2,
-  Trash2, ChevronLeft, ChevronRight, X, UserPlus, Check
+  Search, Download, Eye, Edit2, X, UserPlus
 } from 'lucide-react';
 
 export default function StudentManagement() {
+  const { region } = useRegion();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,11 +16,12 @@ export default function StudentManagement() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
-  // Form state
+  // Region-aware form fields
   const [form, setForm] = useState({
     first_name: '', last_name: '', middle_name: '', email: '', phone: '',
     date_of_birth: '', gender: 'Male', state_of_origin: '', program: 'Computer Science',
     degree_type: 'B.Sc.', admission_year: 2026,
+    national_id_type: '', national_id_value: '', nationality: '',
   });
 
   useEffect(() => {
@@ -45,7 +47,21 @@ export default function StudentManagement() {
     const matric_no = `UNI/${form.admission_year}/CS/${String(count).padStart(3, '0')}`;
 
     const { error } = await supabase.from('students').insert({
-      ...form,
+      first_name: form.first_name,
+      last_name: form.last_name,
+      middle_name: form.middle_name,
+      email: form.email,
+      phone: form.phone,
+      date_of_birth: form.date_of_birth || null,
+      gender: form.gender,
+      state_of_origin: form.state_of_origin,
+      nationality: form.nationality,
+      program: form.program,
+      degree_type: form.degree_type,
+      admission_year: form.admission_year,
+      national_id_type: form.national_id_type || null,
+      national_id_value: form.national_id_value || null,
+      region: region.id,
       matric_no,
       department_id: deptRes.data.id,
       status: 'active',
@@ -54,7 +70,7 @@ export default function StudentManagement() {
 
     if (!error) {
       setShowAddModal(false);
-      setForm({ first_name: '', last_name: '', middle_name: '', email: '', phone: '', date_of_birth: '', gender: 'Male', state_of_origin: '', program: 'Computer Science', degree_type: 'B.Sc.', admission_year: 2026 });
+      setForm({ first_name: '', last_name: '', middle_name: '', email: '', phone: '', date_of_birth: '', gender: 'Male', state_of_origin: '', program: 'Computer Science', degree_type: 'B.Sc.', admission_year: 2026, national_id_type: '', national_id_value: '', nationality: '' });
       fetchStudents();
     }
   }
@@ -239,10 +255,55 @@ export default function StudentManagement() {
                   </select>
                 </div>
               </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">State of Origin</label>
-                <input value={form.state_of_origin} onChange={(e) => setForm({ ...form, state_of_origin: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30" />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">{region.id === 'middleEast' ? 'City of Origin' : region.id === 'northAmerica' ? 'State / Province' : region.id === 'europe' ? 'Region / County' : 'State of Origin'}</label>
+                  <input value={form.state_of_origin} onChange={(e) => setForm({ ...form, state_of_origin: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Nationality</label>
+                  <select value={form.nationality} onChange={(e) => setForm({ ...form, nationality: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30">
+                    <option value="">Select country</option>
+                    {region.countries.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              {/* Region-aware ID capture */}
+              <div className="p-3 rounded-xl bg-blue-50/50 border border-blue-100">
+                <p className="text-xs font-semibold text-blue-700 mb-2">
+                  {region.flagEmoji} {region.name} — Identity verification
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">ID Type</label>
+                    <select
+                      value={form.national_id_type}
+                      onChange={(e) => setForm({ ...form, national_id_type: e.target.value, national_id_value: '' })}
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 bg-white"
+                    >
+                      <option value="">Select ID type</option>
+                      {region.idSchema.map((s) => (
+                        <option key={s.name} value={s.name}>{s.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">ID Number</label>
+                    <input
+                      value={form.national_id_value}
+                      onChange={(e) => setForm({ ...form, national_id_value: e.target.value })}
+                      pattern={region.idSchema.find((s) => s.name === form.national_id_type)?.pattern}
+                      placeholder={`Enter ${form.national_id_type || 'ID'}`}
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 bg-white"
+                    />
+                  </div>
+                </div>
+                <p className="text-[10px] text-gray-500 mt-2">
+                  Stored according to {region.complianceFrameworks.slice(0, 2).join(' / ')} requirements.
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>

@@ -101,7 +101,13 @@ export default function LoginScreen() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src={IMAGES.hero} alt="Campus" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0f1a3c]/95 via-[#1a237e]/90 to-[#1a237e]/80" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(90deg, color-mix(in srgb, var(--region-primary) 60%, #000) 95%, var(--region-primary) 100%)`,
+              opacity: 0.92,
+            }}
+          />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-8">

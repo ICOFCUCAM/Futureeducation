@@ -6,7 +6,8 @@ import type { ViewType, UserRole } from '@/lib/types';
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen, ClipboardList,
   FileText, Award, Monitor, PenTool, FolderOpen, BarChart3,
-  Settings, Shield, LogOut, ChevronLeft, ChevronRight
+  Settings, Shield, LogOut, ChevronLeft, ChevronRight,
+  Wallet, BadgeCheck,
 } from 'lucide-react';
 
 interface MenuItem {
@@ -27,6 +28,8 @@ const menuItems: MenuItem[] = [
   { id: 'lms', labelKey: 'nav.lms', icon: <Monitor size={20} />, roles: ['admin', 'student', 'lecturer'] },
   { id: 'exams', labelKey: 'nav.exams', icon: <PenTool size={20} />, roles: ['admin', 'student', 'lecturer'] },
   { id: 'documents', labelKey: 'nav.documents', icon: <FolderOpen size={20} />, roles: ['admin', 'student'] },
+  { id: 'billing', labelKey: 'nav.billing', icon: <Wallet size={20} />, roles: ['admin', 'student'] },
+  { id: 'credentials', labelKey: 'nav.credentials', icon: <BadgeCheck size={20} />, roles: ['admin', 'student'] },
   { id: 'analytics', labelKey: 'nav.analytics', icon: <BarChart3 size={20} />, roles: ['admin'] },
   { id: 'audit', labelKey: 'nav.audit', icon: <Shield size={20} />, roles: ['admin'] },
   { id: 'settings', labelKey: 'nav.settings', icon: <Settings size={20} />, roles: ['admin', 'student', 'lecturer'] },
@@ -46,9 +49,12 @@ export default function Sidebar({ currentView, onViewChange, collapsed, onToggle
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-full bg-gradient-to-b from-[#0f1a3c] to-[#1a237e] text-white z-40 transition-all duration-300 flex flex-col ${
+      className={`fixed left-0 top-0 h-full text-white z-40 transition-all duration-300 flex flex-col ${
         collapsed ? 'w-[72px]' : 'w-64'
       }`}
+      style={{
+        background: `linear-gradient(180deg, color-mix(in srgb, var(--region-primary) 60%, #000) 0%, var(--region-primary) 100%)`,
+      }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">

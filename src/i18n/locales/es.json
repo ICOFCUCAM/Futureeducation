@@ -30,6 +30,8 @@
     "lms": "Aprendizaje",
     "exams": "Exámenes",
     "documents": "Documentos",
+    "billing": "Facturación",
+    "credentials": "Credenciales",
     "analytics": "Analítica",
     "audit": "Registros de auditoría",
     "settings": "Configuración",

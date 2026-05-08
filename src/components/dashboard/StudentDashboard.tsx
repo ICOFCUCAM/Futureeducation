@@ -33,7 +33,12 @@ export default function StudentDashboard({ onNavigate }: StudentDashboardProps) 
   return (
     <div className="space-y-6">
       {/* Welcome */}
-      <div className="bg-gradient-to-r from-[#1a237e] to-[#3949ab] rounded-2xl p-6 text-white relative overflow-hidden">
+      <div
+        className="rounded-2xl p-6 text-white relative overflow-hidden"
+        style={{
+          background: `linear-gradient(90deg, var(--region-primary) 0%, color-mix(in srgb, var(--region-primary) 60%, white) 100%)`,
+        }}
+      >
         <div className="relative z-10">
           <p className="text-blue-200 text-sm">Welcome back,</p>
           <h1 className="text-2xl font-bold mt-1">{user?.name}</h1>

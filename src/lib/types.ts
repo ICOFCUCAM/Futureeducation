@@ -169,17 +169,19 @@ export interface TranscriptCourse {
   qualityPoint: number;
 }
 
-export type ViewType = 
-  | 'dashboard' 
-  | 'students' 
-  | 'lecturers' 
-  | 'courses' 
-  | 'results' 
-  | 'transcript' 
+export type ViewType =
+  | 'dashboard'
+  | 'students'
+  | 'lecturers'
+  | 'courses'
+  | 'results'
+  | 'transcript'
   | 'certificate'
-  | 'lms' 
+  | 'lms'
   | 'exams'
   | 'documents'
   | 'analytics'
+  | 'billing'
+  | 'credentials'
   | 'settings'
   | 'audit';

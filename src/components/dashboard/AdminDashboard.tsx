@@ -66,7 +66,12 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1a237e] via-[#283593] to-[#3949ab] p-6 text-white">
+      <div
+        className="relative overflow-hidden rounded-2xl p-6 text-white"
+        style={{
+          background: `linear-gradient(90deg, var(--region-primary) 0%, color-mix(in srgb, var(--region-primary) 60%, white) 100%)`,
+        }}
+      >
         <div className="relative z-10">
           <h1 className="text-2xl font-bold">Welcome back, Administrator</h1>
           <p className="text-blue-200 mt-1">Here's what's happening at Federal University of Technology today.</p>

@@ -30,6 +30,8 @@
     "lms": "Apprentissage",
     "exams": "Examens",
     "documents": "Documents",
+    "billing": "Facturation",
+    "credentials": "Justificatifs",
     "analytics": "Analytique",
     "audit": "Journaux d'audit",
     "settings": "Paramètres",

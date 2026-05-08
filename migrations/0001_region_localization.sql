@@ -49,3 +49,11 @@ CREATE TABLE IF NOT EXISTS institutions (
 );
 
 CREATE INDEX IF NOT EXISTS idx_institutions_region ON institutions(region);
+
+-- Region-aware identity capture on students
+ALTER TABLE students
+  ADD COLUMN IF NOT EXISTS region            text REFERENCES region_configs(id),
+  ADD COLUMN IF NOT EXISTS national_id_type  text,
+  ADD COLUMN IF NOT EXISTS national_id_value text;
+
+CREATE INDEX IF NOT EXISTS idx_students_region ON students(region);
