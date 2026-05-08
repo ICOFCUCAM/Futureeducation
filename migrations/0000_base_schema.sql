@@ -149,9 +149,15 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   created_at   timestamptz NOT NULL DEFAULT now()
 );
 
--- Auto-create profile on signup
+-- Auto-create profile on signup. SECURITY DEFINER + locked search_path,
+-- and EXECUTE revoked from anon/authenticated so it isn't reachable via
+-- PostgREST RPC; only the auth.users trigger can fire it.
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER AS $$
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 BEGIN
   INSERT INTO public.profiles (id, email, full_name, role)
   VALUES (
@@ -164,6 +170,10 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM authenticated;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
@@ -203,7 +213,7 @@ DO $$ BEGIN
   CREATE POLICY students_write_admin   ON students    FOR ALL TO authenticated USING (EXISTS (SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role = 'admin'));
   CREATE POLICY courses_write_admin    ON courses     FOR ALL TO authenticated USING (EXISTS (SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role = 'admin'));
   CREATE POLICY results_write_staff    ON results     FOR ALL TO authenticated USING (EXISTS (SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','lecturer')));
-  CREATE POLICY audit_insert_authed    ON audit_logs  FOR INSERT TO authenticated WITH CHECK (true);
+  CREATE POLICY audit_insert_self      ON audit_logs  FOR INSERT TO authenticated WITH CHECK (performed_by = auth.uid()::text OR performed_by = (auth.jwt()->>'email'));
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 
